@@ -14,6 +14,4 @@ See below how to do it. I used this kind of algotithm in a real life scenario to
 ![GitHub Logo](/result.png)  
    
 ## The source code
-![GitHub Logo](/code.png) 
- 
-  
+![GitHub Logo](/code.png)

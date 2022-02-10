@@ -5,10 +5,8 @@ maxcol = List.Max( Table.Column( project, "level") ),
 /* if maxcol = 3, the result will be { "name", "level", "path", "level1", "level2", level3" } */
 allcolumns = List.Combine( 
     { 
-        /* the project columns */
-        { "name", "level", "path", "is_leaf"}, 
-        /* a loop to generate a list of string like "level?" */
-        /* List.Generate is a powerful function to do loop like (for, foreach) in PowerQuery) */
+        { "name", "level", "path", "is_leaf"}, /* the project columns */
+        /* a loop to generate a list of string like "level?" : List.Generate is a powerful function to do loop like (for, foreach) in PowerQuery) */
         List.Generate( 
             /* init at 1 */
             ()  => 1, 
@@ -49,6 +47,8 @@ listsplit = Table.TransformRows(project,
           }
         )
 , allcolumns)),
+/* the last thing is to create a table from the list created in the previous step */
 tableout = Table.FromList(listsplit, Record.FieldValues, allcolumns )
-in tableout
+in 
+  tableout
 	

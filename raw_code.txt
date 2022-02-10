@@ -10,19 +10,19 @@ let
     root = Table.FromRecords( { (Source) }, columns,  MissingField.UseNull ),
     /* recursive function that will be call with a list of records */
     get = (childs) => let
-      /* here the <childs> variable is a LIST of records that is never null */
+      /* here the 'childs' variable is a LIST of records that is never null */
       /* so we create a temp table from that list for the columns we want */
       tbl = Table.FromRecords(childs, columns, MissingField.UseNull),
-      /* the goal here is to call the get function of each record with the children's list */
+      /* the goal here is to call the get function for each list of children until the lowest level */
       all = Table.Combine( 
                   /* we need to combine the list of tables created from the get function */
                   List.Combine( 
                     { 
                       /* we combine the tbl from the current recursion */
                       { tbl }, 
-                      /* we will call recursively the get function with each children of the current record for the list <childs> */
+                      /* we will call recursively the get function with the list of children for each record of the 'childs' list */
                       /* List.Transform, will call many time the get function for each record of the list */
-                      /* so we generate tmp table, and we will combine all of them into one table : all */
+                      /* so we generate a tmp table and we will combine all of them into one table : all */
                       List.Transform( childs, (c) => if c[children]? = null then emptytable else @get(c[children]?)) 
                     }
                   )
@@ -33,9 +33,10 @@ let
     alltables = get(Source[children]),
     /* combine the root with all tables returned from the get function */
     roorall = Table.Combine( { root, alltables } ),
-    /* add a column "is_leaf" to distinquid level considered as parent and the lowest levels that contain record with no children */
+    /* add a column "is_leaf" to distinguish levels considered as parent and the lowest levels that contain records with no children */
     addisleaf = Table.AddColumn(roorall, "is_leaf", each if [children] = null then 1 else 0),
-    /* remove the column "children" that contain null is not children or a list if there were children */
+    /* remove the column "children" that contains null if there is no children or a list if there are children */
     removechildrencolumn = Table.RemoveColumns(addisleaf, { "children"})
 in
     removechildrencolumn
+	

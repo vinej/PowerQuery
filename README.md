@@ -16,7 +16,7 @@ See below how to do it. I used this kind of algotithm in a real life scenario to
 ### The source code
 ![GitHub Logo](/code.png)
 
-## Transform a path field into columns
+## (2) Transform a path field into columns
 
 Supposed with the previous result, we want to create dynamic columns for all parts of the path field. We want the result below
 

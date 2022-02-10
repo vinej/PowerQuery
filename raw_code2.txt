@@ -1,0 +1,52 @@
+let
+/* find the max level. We will create N columns with that information */
+maxcol = List.Max( Table.Column( project, "level") ),
+/* build a columns' list with the columns from project and the dynamic column for each level */
+/* if maxcol = 3, the result will be { "name", "level", "path", "level1", "level2", level3" } */
+allcolumns = List.Combine( 
+    { 
+        /* the project columns */
+        { "name", "level", "path"}, 
+        /* a loop to generate a list of string like "level?" */
+        /* List.Generate is a powerful function to do loop like (for, foreach) in PowerQuery) */
+        List.Generate( 
+            /* init at 1 */
+            ()  => 1, 
+            /* exit condition */
+            (i) => i < maxcol + 1, 
+            /* next */
+            (i) => i + 1, 
+            /* add an element into the list, because List.Generate return a list of something */
+            /* here we will return a list of string */
+            (i) => Text.Combine( { "level", Text.From(i) } )
+        )
+    }
+),
+/* here what we want to do, is to create a list of record. Each record will contain the standard column */
+/* and the dynamic column after splitting the information from the path field who contain all the information */
+listsplit = Table.TransformRows(project,
+      (row) => Record.FromList(List.Combine(
+          {
+              /* add the standard column into the record */
+              { row[name], row[level], row[path] },
+              /* add the column values from the path */
+              Text.Split(Text.Middle(row[path],1),"/"),
+              /* add fake values to fill up all columns because the path does not contains always all the level */
+              List.Generate(
+                  /* the max fake values are the maxcol - the number of level of the current row */
+                  /* here we use the shortcut 'each _' instead of (x) => , both are legal */
+                  () => maxcol - row[level],
+                  /* loop while > 0 */
+                  each _ > 0,
+                  /* decrement the loop counter */
+                  each _ - 1,
+                  /* return an empty value for each loop */
+                  /* so we create a list of empty values */
+                  each ""
+              )
+          }
+        )
+, allcolumns)),
+tableout = Table.FromList(listsplit, Record.FieldValues, allcolumns )
+in tableout
+	

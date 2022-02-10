@@ -15,6 +15,5 @@ See below how to do it. I used this kind of algotithm in a real life scenario to
    
 ## The source code
 ![GitHub Logo](/code.png) 
-  
-## see raw_code.txt and projects.json for the source json file and the code that you can use with PowerBI Desktop
+ 
   

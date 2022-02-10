@@ -6,7 +6,7 @@ maxcol = List.Max( Table.Column( project, "level") ),
 allcolumns = List.Combine( 
     { 
         /* the project columns */
-        { "name", "level", "path"}, 
+        { "name", "level", "path", "is_leaf"}, 
         /* a loop to generate a list of string like "level?" */
         /* List.Generate is a powerful function to do loop like (for, foreach) in PowerQuery) */
         List.Generate( 
@@ -22,13 +22,15 @@ allcolumns = List.Combine(
         )
     }
 ),
-/* here what we want to do, is to create a list of record. Each record will contain the standard column */
-/* and the dynamic column after splitting the information from the path field who contain all the information */
+/* here what we want to create a list of records. Each record will contain the standard columns */
+/* and the dynamic columns after splitting the information from the path field who contains all levels information */
 listsplit = Table.TransformRows(project,
+      /* Transformrows will call the below function with the parameter (row). With that information we will create */
+      /* a list of record with the record from the intial table and the dynamic columns from the path field */
       (row) => Record.FromList(List.Combine(
           {
-              /* add the standard column into the record */
-              { row[name], row[level], row[path] },
+              /* add standard columns into the record */
+              { row[name], row[level], row[path], row[is_leaf] },
               /* add the column values from the path */
               Text.Split(Text.Middle(row[path],1),"/"),
               /* add fake values to fill up all columns because the path does not contains always all the level */

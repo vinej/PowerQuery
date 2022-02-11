@@ -41,6 +41,6 @@ Supposed the client gave more complex specifications.
 
 ### The code (project_sector query)
 ![GitHub Logo](/code3a.png)
- ![GitHub Logo](/code3b.png)
+![GitHub Logo](/code3b.png)
 
 JYV

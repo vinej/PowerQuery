@@ -24,7 +24,7 @@ Supposed with the previous result, we want to create dynamic columns for all par
 ### The result we want
 ![GitHub Logo](/result2.png)
 
-### The source code (project_col query)
+### The source code (project_col uses project query)
 ![GitHub Logo](/code2.png)
 
 ## (3) Recreate the organisation structure Sector/Bu/Division/Project
@@ -39,7 +39,7 @@ Supposed the client gave more complex specifications.
 ### The result we want
 ![GitHub Logo](/result3.png)
 
-### The code (project_sector query)
+### The code (project_sector uses project_col query)
 ![GitHub Logo](/code3a.png)
 ![GitHub Logo](/code3b.png)
 

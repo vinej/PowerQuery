@@ -1,23 +1,92 @@
 {
-    "name" : "Project",
-    "path" : "/Project",
+    "name" : "Root",
+    "path" : "/Root",
     "level" : 1,
     "children": [
 	  {
-    	"name": "P_ALL",
-    	"path": "/Project/P_ALL",
+    	"name": "Sector1",
+    	"path": "/Root/Sector1",
     	"level" : 2,
     	"children": [
         	{
-            		"name": "O_CONTINUED",
-            		"path": "/Project/P_ALL/O_CONTINUED",
-            		"level": 3
-        	},
-		    {
-            		"name": "O_CONTINUED2",
-            		"path": "/Project/P_ALL/O_CONTINUED2",
-            		"level": 3
-        	}
+				"name": "BU1",
+				"path": "/Root/Sector1/BU1",
+				"level": 3,
+				"children": [
+					{
+						"name": "Division1",
+						"path": "/Root/Sector1/BU1/Division1",
+						"level": 4,
+						"children": [
+							{
+								"name": "Project1",
+								"path": "/Root/Sector1/BU1/Division1/Project1",
+								"level": 5,
+								"children": [
+									{
+										"name": "SubProject1",
+										"path": "/Root/Sector1/BU1/Division1/Project1/SubProject1",
+										"level": 6
+									}
+								]
+							}
+							,
+							{
+								"name": "Project2",
+								"path": "/Root/Sector1/BU1/Division1/Project2",
+								"level": 5
+							}							
+						]
+					}
+				]
+			}
+		]
+	  }
+	  ,
+	  {
+		"name": "Master",
+    	"path": "/Root/Master",
+    	"level" : 2,
+		"children": [
+		  {
+			"name": "Sector2",
+			"path": "/Root/Master/Sector2",
+			"level" : 3,
+			"children": [
+				{
+					"name": "BU2",
+					"path": "/Root/Master/Sector2/BU2",
+					"level": 4,
+					"children": [
+						{
+							"name": "Division2",
+							"path": "/Root/Master/Sector2/BU2/Division2",
+							"level": 5,
+							"children": [
+								{
+									"name": "Project3",
+									"path": "/Root/Master/Sector2/BU2/Division2/Project3",
+									"level": 6,
+									"children": [
+										{
+											"name": "SubProject3",
+											"path": "/Root/Master/Sector2/BU2/Division2/Project3/SubProject3",
+											"level": 7
+										}
+									]
+								}
+								,
+								{
+									"name": "Project4",
+									"path": "/Root/Master/Sector2/BU2/Division2/Project4",
+									"level": 6
+								}							
+							]
+						}
+					]
+				}
+			]
+		  }
 		]
 	  }
     ]

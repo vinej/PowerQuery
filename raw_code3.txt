@@ -1,0 +1,65 @@
+let
+    /* create a list of sector to filter */
+    sectors = {
+            "Sector1",
+            "Sector2"
+    },
+    /* get only last level, real projects with no children */
+    Source = Table.SelectRows( project_col, each [is_leaf] = 1),
+    /* get only rows for the sector lists */
+    OnlySectors = Table.SelectRows( Source, (row) =>
+        /* instead of doing multiple hardcode OR, we generate a list with List.Transform that will contain 1 if */
+        /* the path contains the sector or 0 if not. If the max equal to 1 that means that the row is at least into */
+        /* one of the sector */
+        List.Max(
+            List.Transform( sectors, (sector) => if Text.Contains( row[path], Text.Combine({"/",sector,"/"})) then 1 else 0)) = 1),
+    /* we create the destination table columns with fix columns to be used in a dataset */
+    columns = { "sector", "bu", "division", "project", "level4", "level5" },
+    /* transform table into a list of records with the fields we want */
+    listrecords = Table.TransformRows(OnlySectors, (row) => let
+        /* the the fields list from the path */
+        fields = Text.Split(Text.Middle(row[path],1),"/"),
+        /* found at which level is one of the available sectors */
+        fields_count = List.Count(fields),
+        field_index = List.Max(
+            List.Generate( 
+                () => 0, 
+                each _ < fields_count, 
+                each _ + 1, 
+                (index) => List.Max( List.Transform(sectors, (sector) => if sector = fields{index} then index else 0))
+            )
+        ),
+        /* create a record for each row with fields needed */
+        recordout = Record.FromList( 
+            List.Combine( {
+                /* add the organization columns sector, bu, division, project that start at field index */
+                {   Record.Field( row, Text.Combine({ "level", Text.From(field_index + 1) })),     
+                    Record.Field( row, Text.Combine({ "level", Text.From(field_index + 2) })), 
+                    Record.Field( row, Text.Combine({ "level", Text.From(field_index + 3) })),
+                    Record.Field( row, Text.Combine({ "level", Text.From(field_index + 4) }))
+                },
+                /* add the remaining level after sector/bu/division */
+                List.Generate( 
+                    () => field_index + 5,
+                    each _ < row[level] + 1 ,
+                    each _ + 1,
+                    each Record.Field( row, Text.Combine({ "level", Text.From(_) }))
+                ),
+                /* add the fake values to fill up all the columns */
+                List.Generate(
+                    /* here we use the shortcut 'each _' instead of (x) => , both are legal */
+                    () => List.Count(columns) - (row[level] - field_index),
+                    /* loop while > 0 */
+                    each _ > 0,
+                    /* decrement the loop counter */
+                    each _ - 1,
+                    /* return an empty value for each loop */
+                    /* so we create a list of empty values for levels that don't exist into the path field */
+                    each ""
+                )
+            }), columns)
+        in recordout
+    ),
+    tableout = Table.FromList(listrecords, Record.FieldValues, columns )
+in
+    tableout

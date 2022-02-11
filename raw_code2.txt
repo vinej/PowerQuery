@@ -2,7 +2,7 @@ let
 /* find the max level. We will create N columns with that information */
 maxcol = List.Max( Table.Column( project, "level") ),
 /* build a columns' list with columns from project and dynamic columns for all level */
-/* if maxcol = 3, the result will be { "name", "level", "path", "ìs_leaf"`, "level1", "level2", level3" } */
+/* if maxcol = 3, the result will be { "name", "level", "path", "ìs_leaf", "level1", "level2", level3" } */
 allcolumns = List.Combine( 
     { 
         { "name", "level", "path", "is_leaf"}, /* the project columns */

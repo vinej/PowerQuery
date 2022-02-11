@@ -26,5 +26,17 @@ Supposed with the previous result, we want to create dynamic columns for all par
 ### The source code
 ![GitHub Logo](/code2.png)
 
+Supposed the the client gave a more complex specification. 
+- He wants only the last level (is_leaf=1)
+- He said that the level represent a organiztion chart of 4 minimum levels Sector/Bu/Division/Project, 
+  but could start at different level. It's not standard. 
+- He wants only records that included into a list of sectors
+
+### The result we want
+![GitHub Logo](/result3.png)
+
+### The code
+![GitHub Logo](/code3a.png)
+![GitHub Logo](/code3b.png)
 
 JYV

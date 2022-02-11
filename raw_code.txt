@@ -1,6 +1,6 @@
 let
     /* read the json file, in real life a call to a REST service return json */
-    Source = Json.Document(File.Contents("C:\test\v2.5\pr.json")),
+    Source = Json.Document(File.Contents("C:\test\pr.json")),
     /* create a empty table */
     emptytable = #table( columns, {} ),
     /* create the list of columns to manage from the json file */
@@ -36,7 +36,7 @@ let
     /* add a column "is_leaf" to distinguish levels considered as parent and the lowest levels that contain records with no children */
     addisleaf = Table.AddColumn(roorall, "is_leaf", each if [children] = null then 1 else 0),
     /* remove the column "children" that contains null if there is no children or a list if there are children */
-    removechildrencolumn = Table.RemoveColumns(addisleaf, { "children"})
+    removechildrencolumn = Table.RemoveColumns(addisleaf, { "children"}),
+    #"Changed Type" = Table.TransformColumnTypes(removechildrencolumn,{{"level", Int64.Type}})
 in
-    removechildrencolumn
-	
+    #"Changed Type"

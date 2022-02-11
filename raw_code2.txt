@@ -1,12 +1,13 @@
 let
 /* find the max level. We will create N columns with that information */
 maxcol = List.Max( Table.Column( project, "level") ),
-/* build a columns' list with the columns from project and the dynamic column for each level */
-/* if maxcol = 3, the result will be { "name", "level", "path", "level1", "level2", level3" } */
+/* build a columns' list with columns from project and dynamic columns for all level */
+/* if maxcol = 3, the result will be { "name", "level", "path", "ìs_leaf"`, "level1", "level2", level3" } */
 allcolumns = List.Combine( 
     { 
         { "name", "level", "path", "is_leaf"}, /* the project columns */
-        /* a loop to generate a list of string like "level?" : List.Generate is a powerful function to do loop like (for, foreach) in PowerQuery) */
+        /* a loop to generate a list of string like "level?" : */
+        /* List.Generate is a powerful function to do loop like (for, foreach) in PowerQuery) */
         List.Generate( 
             /* init at 1 */
             ()  => 1, 
@@ -20,20 +21,19 @@ allcolumns = List.Combine(
         )
     }
 ),
-/* here what we want to create a list of records. Each record will contain the standard columns */
+/* here we want to create a list of records. Each record will contain the standard columns */
 /* and the dynamic columns after splitting the information from the path field who contains all levels information */
 listsplit = Table.TransformRows(project,
-      /* Transformrows will call the below function with the parameter (row). With that information we will create */
-      /* a list of record with the record from the intial table and the dynamic columns from the path field */
+      /* Table.TransformRows will call the below function with the parameter (row). With that information we will create */
+      /* a list of records with fixed columns and dynamic columns from the path field */
       (row) => Record.FromList(List.Combine(
           {
-              /* add standard columns into the record */
+              /* add fixed columns into the record */
               { row[name], row[level], row[path], row[is_leaf] },
-              /* add the column values from the path */
+              /* add dynamic columns values from the path field */
               Text.Split(Text.Middle(row[path],1),"/"),
               /* add fake values to fill up all columns because the path does not contains always all the level */
               List.Generate(
-                  /* the max fake values are the maxcol - the number of level of the current row */
                   /* here we use the shortcut 'each _' instead of (x) => , both are legal */
                   () => maxcol - row[level],
                   /* loop while > 0 */
@@ -41,14 +41,13 @@ listsplit = Table.TransformRows(project,
                   /* decrement the loop counter */
                   each _ - 1,
                   /* return an empty value for each loop */
-                  /* so we create a list of empty values */
+                  /* so we create a list of empty values for levels that don't exist into the path field */
                   each ""
               )
           }
         )
 , allcolumns)),
-/* the last thing is to create a table from the list created in the previous step */
+/* the last thing is to create a table from the list created from the previous step */
 tableout = Table.FromList(listsplit, Record.FieldValues, allcolumns )
 in 
   tableout
-	

@@ -33,7 +33,7 @@ Supposed the client gave more complex specifications.
 - He wants only the last level (is_leaf=1)
 - He said that 4 levels represent the organisation hierarchy with 4 minimum levels Sector/Bu/Division/Project
 - It could have more levels 
-- the sector level does always start at the same level. It's not standard. 
+- the sector level does NOT always start at the same level. It's not standard. 
 - He wants only records from a list of know sectors.
 
 ### The result we want
